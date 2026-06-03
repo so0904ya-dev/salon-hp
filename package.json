@@ -1,10 +1,6 @@
 {
   "name": "salon-hp",
   "version": "1.0.0",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
-  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
     "express": "^4.19.2"

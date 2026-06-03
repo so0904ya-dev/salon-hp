@@ -15,7 +15,7 @@ function appendMessage(text, type) {
 function showTyping() {
   const box = document.getElementById('chat-messages');
   const div = document.createElement('div');
-  div.className = 'msg msg-bot typing-indicator';
+  div.className = 'msg msg-bot';
   div.id = 'typing-indicator';
   div.textContent = '入力中…';
   box.appendChild(div);
@@ -28,7 +28,7 @@ function hideTyping() {
   if (el) el.remove();
 }
 
-// Claude API にメッセージを送信してストリーミング受信
+// Claude API にメッセージを送信
 async function sendToClaude(userText) {
   const response = await fetch('/api/chat', {
     method: 'POST',
@@ -36,50 +36,11 @@ async function sendToClaude(userText) {
     body: JSON.stringify({ message: userText }),
   });
 
-  if (!response.ok) {
-    throw new Error('サーバーエラー');
-  }
+  if (!response.ok) throw new Error('サーバーエラー');
 
-  // SSE をストリーミングで処理
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let botDiv = null;
-  let buffer = '';
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop(); // 未完結の行は次ループへ持ち越す
-
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
-      const payload = line.slice(6).trim();
-      if (payload === '[DONE]') break;
-
-      try {
-        const { delta, error } = JSON.parse(payload);
-        if (error) {
-          hideTyping();
-          appendMessage(error, 'bot');
-          return;
-        }
-        if (delta) {
-          if (!botDiv) {
-            hideTyping();
-            botDiv = appendMessage('', 'bot');
-          }
-          botDiv.textContent += delta;
-          const box = document.getElementById('chat-messages');
-          box.scrollTop = box.scrollHeight;
-        }
-      } catch (_) {
-        // JSON パース失敗は無視
-      }
-    }
-  }
+  const data = await response.json();
+  if (data.error) throw new Error(data.error);
+  return data.reply;
 }
 
 // ユーザーの入力を処理
@@ -93,11 +54,12 @@ async function handleInput() {
   input.value = '';
   input.disabled = true;
   sendBtn.disabled = true;
-
   showTyping();
 
   try {
-    await sendToClaude(text);
+    const reply = await sendToClaude(text);
+    hideTyping();
+    appendMessage(reply, 'bot');
   } catch {
     hideTyping();
     appendMessage('通信エラーが発生しました。しばらくしてからお試しください。', 'bot');
@@ -113,7 +75,6 @@ function toggleChat() {
   const win = document.getElementById('chat-window');
   win.classList.toggle('open');
 
-  // 初回オープン時にウェルカムメッセージを表示
   const messages = document.getElementById('chat-messages');
   if (win.classList.contains('open') && messages.children.length === 0) {
     appendMessage('こんにちは！SalonName AIアシスタントです。営業時間・料金・予約・アクセスなど、何でもお気軽にどうぞ。', 'bot');
