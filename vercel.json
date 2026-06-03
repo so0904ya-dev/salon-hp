@@ -8,8 +8,24 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/chat",
       "dest": "server.js"
+    },
+    {
+      "src": "/index.html",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/chatbot.js",
+      "dest": "/chatbot.js"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     }
   ]
 }
