@@ -6,7 +6,7 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.52.0",
+    "@anthropic-ai/sdk": "^0.100.1",
     "express": "^4.19.2"
   }
 }
