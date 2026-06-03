@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サロン名 | 美容サロン</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== ヘッダー ===== -->
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="logo">Salon<span>Name</span></a>
+      <nav id="main-nav">
+        <a href="#service">サービス</a>
+        <a href="#about">サロンについて</a>
+        <a href="#contact">お問い合わせ</a>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="メニューを開く">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section id="hero">
+    <div class="container">
+      <p class="hero-eyebrow">Beauty Salon</p>
+      <h1>あなたの<em>美しさ</em>を<br>引き出すサロン</h1>
+      <p>一人ひとりの個性に寄り添い、最高の仕上がりをお届けします。<br>初めてのご来店も、ぜひお気軽にどうぞ。</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn btn-primary">ご予約・お問い合わせ</a>
+        <a href="#service" class="btn btn-outline">サービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Service ===== -->
+  <section id="service">
+    <div class="container">
+      <p class="section-label fade-in">Services</p>
+      <h2 class="section-title fade-in">サービス・料金</h2>
+      <p class="section-sub fade-in">丁寧なカウンセリングをもとに、お客様お一人おひとりに最適なメニューをご提案します。</p>
+
+      <div class="service-grid">
+
+        <div class="service-card fade-in">
+          <div class="service-icon">✂️</div>
+          <h3>カット</h3>
+          <p>骨格・髪質・ライフスタイルを考慮したカットで、毎日のスタイリングが楽になる仕上がりに。</p>
+          <p class="service-price">¥4,000 <span>〜（税込）</span></p>
+        </div>
+
+        <div class="service-card fade-in">
+          <div class="service-icon">🎨</div>
+          <h3>カラー</h3>
+          <p>トレンドカラーから定番のナチュラルカラーまで、幅広いカラーリングに対応しています。</p>
+          <p class="service-price">¥8,000 <span>〜（税込）</span></p>
+        </div>
+
+        <div class="service-card fade-in">
+          <div class="service-icon">💆</div>
+          <h3>トリートメント</h3>
+          <p>ダメージを受けた髪を内側からケア。ツヤとまとまりを長期間キープします。</p>
+          <p class="service-price">¥3,000 <span>〜（税込）</span></p>
+        </div>
+
+        <div class="service-card fade-in">
+          <div class="service-icon">🌸</div>
+          <h3>パーマ</h3>
+          <p>柔らかいウェーブから動きのあるスタイルまで、理想のカールを実現します。</p>
+          <p class="service-price">¥9,000 <span>〜（税込）</span></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image fade-in">💇</div>
+        <div>
+          <p class="section-label fade-in">About</p>
+          <h2 class="section-title fade-in">サロンについて</h2>
+          <p class="fade-in" style="color: var(--muted);">
+            私たちのサロンは、お客様のライフスタイルに寄り添うスタイルをご提案することを大切にしています。
+            経験豊富なスタイリストが、丁寧なカウンセリングのもと最高の仕上がりをお届けします。
+          </p>
+          <ul class="feature-list">
+            <li class="fade-in">完全予約制でリラックスした時間をご提供</li>
+            <li class="fade-in">厳選したオーガニック製品を使用</li>
+            <li class="fade-in">豊富な経験を持つ国家資格取得スタイリスト</li>
+            <li class="fade-in">お子様連れも歓迎。キッズスペースあり</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact">
+    <div class="container">
+      <p class="section-label fade-in">Contact</p>
+      <h2 class="section-title fade-in">お問い合わせ・ご予約</h2>
+      <p class="section-sub fade-in">ご予約・ご質問はこちらのフォームからお気軽にどうぞ。通常1〜2営業日以内にご返答いたします。</p>
+
+      <div class="contact-inner">
+        <form id="contact-form" onsubmit="handleSubmit(event)">
+
+          <div class="form-group fade-in">
+            <label>お名前<span class="req">必須</span></label>
+            <input type="text" placeholder="山田 花子" required>
+          </div>
+
+          <div class="form-group fade-in">
+            <label>メールアドレス<span class="req">必須</span></label>
+            <input type="email" placeholder="example@email.com" required>
+          </div>
+
+          <div class="form-group fade-in">
+            <label>ご希望メニュー</label>
+            <select>
+              <option value="">選択してください</option>
+              <option>カット</option>
+              <option>カラー</option>
+              <option>トリートメント</option>
+              <option>パーマ</option>
+              <option>その他</option>
+            </select>
+          </div>
+
+          <div class="form-group fade-in">
+            <label>お問い合わせ内容<span class="req">必須</span></label>
+            <textarea placeholder="ご希望の日時やご質問をご記入ください" required></textarea>
+          </div>
+
+          <p class="form-notice fade-in">※ご入力いただいた情報は、お問い合わせ対応のみに使用します。</p>
+
+          <button type="submit" class="btn btn-primary fade-in">送信する</button>
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+
+        <div>
+          <p class="footer-logo">Salon<span>Name</span></p>
+          <p class="footer-desc">
+            一人ひとりの個性に寄り添い、<br>最高の美しさを引き出す美容サロン。
+          </p>
+        </div>
+
+        <div>
+          <h4>メニュー</h4>
+          <ul class="footer-list">
+            <li><a href="#service">サービス・料金</a></li>
+            <li><a href="#about">サロンについて</a></li>
+            <li><a href="#contact">お問い合わせ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>店舗情報</h4>
+          <ul class="footer-list footer-info">
+            <li><span class="icon">📍</span>〇〇県〇〇市〇〇町1-2-3</li>
+            <li><span class="icon">📞</span>000-0000-0000</li>
+            <li><span class="icon">🕐</span>10:00〜20:00（月曜定休）</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p class="footer-bottom">© 2026 SalonName. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== チャットボット ===== -->
+  <div id="chatbot-fab">
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        💬 よくあるご質問
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="質問を入力…">
+        <button onclick="handleInput()" aria-label="送信">➤</button>
+      </div>
+    </div>
+    <button class="chat-btn" onclick="toggleChat()" aria-label="チャットを開く">💬</button>
+  </div>
+
+  <script src="chatbot.js"></script>
+  <script>
+    /* お問い合わせフォーム送信のデモ処理 */
+    function handleSubmit(e) {
+      e.preventDefault();
+      alert('お問い合わせを受け付けました。担当者よりご連絡いたします。');
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>
