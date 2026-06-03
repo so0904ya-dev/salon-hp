@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+const Anthropic = require('@anthropic-ai/sdk');
 
 // チャットボット用システムプロンプト
 const SYSTEM_PROMPT = `あなたは美容サロン「SalonName」のAIアシスタントです。
@@ -21,8 +21,7 @@ const SYSTEM_PROMPT = `あなたは美容サロン「SalonName」のAIアシス�
 サロンに関係のないご質問には「申し訳ございませんが、サロンに関するご質問のみお答えしております」とお伝えください。
 回答は簡潔に3文以内でまとめてください。`;
 
-export default async function handler(req, res) {
-  // CORS ヘッダー
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -35,31 +34,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'メッセージが空です' });
   }
 
-  const client = new Anthropic();
-
-  // SSE ヘッダーを設定
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-
   try {
-    const stream = client.messages.stream({
+    const client = new Anthropic();
+    const response = await client.messages.create({
       model: 'claude-opus-4-8',
       max_tokens: 512,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: message.trim() }],
     });
 
-    stream.on('text', (delta) => {
-      res.write(`data: ${JSON.stringify({ delta })}\n\n`);
-    });
-
-    await stream.finalMessage();
-    res.write('data: [DONE]\n\n');
-    res.end();
+    const text = response.content.find(b => b.type === 'text')?.text || '';
+    res.status(200).json({ reply: text });
   } catch (err) {
     console.error('Claude API エラー:', err);
-    res.write(`data: ${JSON.stringify({ error: 'AIの応答取得中にエラーが発生しました。' })}\n\n`);
-    res.end();
+    res.status(500).json({ error: 'AIの応答取得中にエラーが発生しました。' });
   }
-}
+};
