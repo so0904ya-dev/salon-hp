@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+const Anthropic = require('@anthropic-ai/sdk').default;
 
 // チャットボット用システムプロンプト
 const SYSTEM_PROMPT = `あなたは美容サロン「SalonName」のAIアシスタントです。
@@ -21,7 +21,7 @@ const SYSTEM_PROMPT = `あなたは美容サロン「SalonName」のAIアシス�
 サロンに関係のないご質問には「申し訳ございませんが、サロンに関するご質問のみお答えしております」とお伝えください。
 回答は簡潔に3文以内でまとめてください。`;
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS ヘッダー
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
