@@ -1,31 +1,4 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/chat",
-      "dest": "server.js"
-    },
-    {
-      "src": "/index.html",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/style.css",
-      "dest": "/style.css"
-    },
-    {
-      "src": "/chatbot.js",
-      "dest": "/chatbot.js"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
-    }
-  ]
+  "outputDirectory": "public"
 }
