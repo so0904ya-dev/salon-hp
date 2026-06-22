@@ -3,212 +3,254 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>サロン名 | 美容サロン</title>
+  <title>Lunéviel | しなやかな強さを、纏う。</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ===== ヘッダー ===== -->
-  <header>
-    <div class="container header-inner">
-      <a href="#" class="logo">Salon<span>Name</span></a>
-      <nav id="main-nav">
-        <a href="#service">サービス</a>
-        <a href="#about">サロンについて</a>
-        <a href="#contact">お問い合わせ</a>
+  <!-- ===== ナビゲーション ===== -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="#" class="header-logo">
+        <img src="logo.png" alt="Lunéviel" class="header-logo-img">
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <a href="#concept">Concept</a>
+        <a href="#story">Story</a>
+        <a href="#collection">Collection</a>
+        <a href="#contact">Contact</a>
       </nav>
-      <button class="nav-toggle" id="nav-toggle" aria-label="メニューを開く">
+      <button class="nav-toggle" id="nav-toggle" aria-label="メニュー">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
-  <!-- ===== Hero ===== -->
-  <section id="hero">
-    <div class="container">
-      <p class="hero-eyebrow">Beauty Salon</p>
-      <h1>あなたの<em>美しさ</em>を<br>引き出すサロン</h1>
-      <p>一人ひとりの個性に寄り添い、最高の仕上がりをお届けします。<br>初めてのご来店も、ぜひお気軽にどうぞ。</p>
-      <div class="hero-btns">
-        <a href="#contact" class="btn btn-primary">ご予約・お問い合わせ</a>
-        <a href="#service" class="btn btn-outline">サービスを見る</a>
-      </div>
+  <!-- ===== ヒーロー ===== -->
+  <section class="hero">
+    <img src="logo.png" alt="" class="hero-bg-logo" aria-hidden="true">
+    <div class="hero-content">
+      <p class="hero-tagline">しなやかな強さを、纏う。</p>
+      <p class="hero-sub">羽織るだけで、心が凛と整う。</p>
+      <a href="#collection" class="btn-outline">Collection</a>
+    </div>
+    <div class="hero-scroll">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- ===== Service ===== -->
-  <section id="service">
+  <!-- ===== コンセプト ===== -->
+  <section class="section concept" id="concept">
     <div class="container">
-      <p class="section-label fade-in">Services</p>
-      <h2 class="section-title fade-in">サービス・料金</h2>
-      <p class="section-sub fade-in">丁寧なカウンセリングをもとに、お客様お一人おひとりに最適なメニューをご提案します。</p>
-
-      <div class="service-grid">
-
-        <div class="service-card fade-in">
-          <div class="service-icon">✂️</div>
-          <h3>カット</h3>
-          <p>骨格・髪質・ライフスタイルを考慮したカットで、毎日のスタイリングが楽になる仕上がりに。</p>
-          <p class="service-price">¥4,000 <span>〜（税込）</span></p>
+      <div class="section-label">Concept</div>
+      <h2 class="section-title">ただの服ではなく、<br>「自分らしさを受け止める空気」のような存在を。</h2>
+      <div class="concept-grid">
+        <div class="concept-item">
+          <div class="concept-icon">C</div>
+          <h3>Comfort Elegance</h3>
+          <p>そのままの自分でいられる温かさを。静かに美しく、自分を引き立てる。</p>
         </div>
-
-        <div class="service-card fade-in">
-          <div class="service-icon">🎨</div>
-          <h3>カラー</h3>
-          <p>トレンドカラーから定番のナチュラルカラーまで、幅広いカラーリングに対応しています。</p>
-          <p class="service-price">¥8,000 <span>〜（税込）</span></p>
+        <div class="concept-item">
+          <div class="concept-icon">A</div>
+          <h3>Authenticity</h3>
+          <p>飾らない自分を肯定できること。本質的な美しさを、大切に。</p>
         </div>
-
-        <div class="service-card fade-in">
-          <div class="service-icon">💆</div>
-          <h3>トリートメント</h3>
-          <p>ダメージを受けた髪を内側からケア。ツヤとまとまりを長期間キープします。</p>
-          <p class="service-price">¥3,000 <span>〜（税込）</span></p>
+        <div class="concept-item">
+          <div class="concept-icon">G</div>
+          <h3>Gracefulness</h3>
+          <p>状況に柔軟に対応できるたおやかさ。控えめでありながら芯のある佇まい。</p>
         </div>
-
-        <div class="service-card fade-in">
-          <div class="service-icon">🌸</div>
-          <h3>パーマ</h3>
-          <p>柔らかいウェーブから動きのあるスタイルまで、理想のカールを実現します。</p>
-          <p class="service-price">¥9,000 <span>〜（税込）</span></p>
+        <div class="concept-item">
+          <div class="concept-icon">S</div>
+          <h3>Sincerity</h3>
+          <p>長く寄り添える信頼感。質の高さが自然に伝わる存在感。</p>
         </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== About ===== -->
-  <section id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-image fade-in">💇</div>
-        <div>
-          <p class="section-label fade-in">About</p>
-          <h2 class="section-title fade-in">サロンについて</h2>
-          <p class="fade-in" style="color: var(--muted);">
-            私たちのサロンは、お客様のライフスタイルに寄り添うスタイルをご提案することを大切にしています。
-            経験豊富なスタイリストが、丁寧なカウンセリングのもと最高の仕上がりをお届けします。
-          </p>
-          <ul class="feature-list">
-            <li class="fade-in">完全予約制でリラックスした時間をご提供</li>
-            <li class="fade-in">厳選したオーガニック製品を使用</li>
-            <li class="fade-in">豊富な経験を持つ国家資格取得スタイリスト</li>
-            <li class="fade-in">お子様連れも歓迎。キッズスペースあり</li>
-          </ul>
+        <div class="concept-item">
+          <div class="concept-icon">I</div>
+          <h3>Intellect</h3>
+          <p>日々の中にふとしたやさしさを。知的で静かな美意識。</p>
+        </div>
+        <div class="concept-item">
+          <div class="concept-icon">L</div>
+          <h3>Subtle Luxury</h3>
+          <p>無駄のない美しさ。日常の中にさりげない個性を宿す。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Contact ===== -->
-  <section id="contact">
-    <div class="container">
-      <p class="section-label fade-in">Contact</p>
-      <h2 class="section-title fade-in">お問い合わせ・ご予約</h2>
-      <p class="section-sub fade-in">ご予約・ご質問はこちらのフォームからお気軽にどうぞ。通常1〜2営業日以内にご返答いたします。</p>
-
-      <div class="contact-inner">
-        <form id="contact-form" onsubmit="handleSubmit(event)">
-
-          <div class="form-group fade-in">
-            <label>お名前<span class="req">必須</span></label>
-            <input type="text" placeholder="山田 花子" required>
-          </div>
-
-          <div class="form-group fade-in">
-            <label>メールアドレス<span class="req">必須</span></label>
-            <input type="email" placeholder="example@email.com" required>
-          </div>
-
-          <div class="form-group fade-in">
-            <label>ご希望メニュー</label>
-            <select>
-              <option value="">選択してください</option>
-              <option>カット</option>
-              <option>カラー</option>
-              <option>トリートメント</option>
-              <option>パーマ</option>
-              <option>その他</option>
-            </select>
-          </div>
-
-          <div class="form-group fade-in">
-            <label>お問い合わせ内容<span class="req">必須</span></label>
-            <textarea placeholder="ご希望の日時やご質問をご記入ください" required></textarea>
-          </div>
-
-          <p class="form-notice fade-in">※ご入力いただいた情報は、お問い合わせ対応のみに使用します。</p>
-
-          <button type="submit" class="btn btn-primary fade-in">送信する</button>
-
-        </form>
+  <!-- ===== ストーリー ===== -->
+  <section class="section story" id="story">
+    <div class="container story-inner">
+      <div class="story-text">
+        <div class="section-label">Story</div>
+        <h2 class="section-title">服は、心を整え、<br>自分自身を肯定する<br>きっかけとなる。</h2>
+        <p class="story-body">
+          Lunévielは、単なる衣服のブランドではありません。着る人の感情や価値観にそっと寄り添い、静かに力を与える存在でありたいと考えています。私たちが大切にしているのは、安心感や自然体、上品さ、そしてしなやかさといった感情です。
+        </p>
+        <p class="story-body">
+          Lunévielの服を身にまとうことで、着る人がそのままの自分を受け入れ、静かに自信を持てるような"心の余白"が生まれることを願っています。無理に着飾るのではなく、ありのままの自分をそっと引き立ててくれる。そんな存在でありたいと考えています。
+        </p>
+        <p class="story-body">
+          この哲学は、すべてのものづくりの根幹にあります。デザイン、素材、ロゴ、言葉、パッケージ、色彩など、一つひとつに込めた想いが重なり合って、ようやく一つの"空気"としてブランドが立ち上がっていきます。
+        </p>
+      </div>
+      <div class="story-visual">
+        <div class="story-quote">
+          <p class="story-quote-text">「今日の私も<br>悪くない」</p>
+          <span>と思える瞬間を届けたい。</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Footer ===== -->
-  <footer>
+  <!-- ===== コレクション ===== -->
+  <section class="section collection" id="collection">
     <div class="container">
-      <div class="footer-grid">
-
-        <div>
-          <p class="footer-logo">Salon<span>Name</span></p>
-          <p class="footer-desc">
-            一人ひとりの個性に寄り添い、<br>最高の美しさを引き出す美容サロン。
-          </p>
+      <div class="section-label">Collection</div>
+      <h2 class="section-title">代表作</h2>
+      <div class="collection-grid">
+        <div class="collection-card">
+          <div class="collection-img">
+            <div class="collection-tag">No.01</div>
+            <img src="collection_1.png" alt="しなやかな強さを纏うカーディガン Navy × Blue">
+          </div>
+          <div class="collection-info">
+            <h3>しなやかな強さを纏うカーディガン</h3>
+            <p class="collection-color">Navy × Blue</p>
+            <p class="collection-desc">羽織った瞬間、自然に「整う」。心にも体にもスッと軸が通るような一着。信頼感と深みのネイビーに、個性と未来志向を象徴するブルーの袖口。</p>
+          </div>
         </div>
-
-        <div>
-          <h4>メニュー</h4>
-          <ul class="footer-list">
-            <li><a href="#service">サービス・料金</a></li>
-            <li><a href="#about">サロンについて</a></li>
-            <li><a href="#contact">お問い合わせ</a></li>
-          </ul>
+        <div class="collection-card">
+          <div class="collection-img">
+            <div class="collection-tag">No.02</div>
+            <img src="collection_3.png" alt="しなやかな強さを纏うカーディガン Grey × Pink">
+          </div>
+          <div class="collection-info">
+            <h3>しなやかな強さを纏うカーディガン</h3>
+            <p class="collection-color">Grey × Pink</p>
+            <p class="collection-desc">穏やかな安心感の中に自分らしさを取り戻せる、優しい配色。柔らかな肌触りと丁寧な仕立てが、長時間の着用でもストレスを感じさせない。</p>
+          </div>
         </div>
-
-        <div>
-          <h4>店舗情報</h4>
-          <ul class="footer-list footer-info">
-            <li><span class="icon">📍</span>〇〇県〇〇市〇〇町1-2-3</li>
-            <li><span class="icon">📞</span>000-0000-0000</li>
-            <li><span class="icon">🕐</span>10:00〜20:00（月曜定休）</li>
-          </ul>
+        <div class="collection-card">
+          <div class="collection-img">
+            <div class="collection-tag">No.03</div>
+            <img src="collection_2.png" alt="しなやかな強さを纏うカーディガン Charcoal × Burgundy">
+          </div>
+          <div class="collection-info">
+            <h3>しなやかな強さを纏うカーディガン</h3>
+            <p class="collection-color">Charcoal × Burgundy</p>
+            <p class="collection-desc">深みのあるチャコールに、バーガンディの袖口が静かな個性を添える。凛とした印象の中に、温もりをそっと宿した一着。</p>
+          </div>
         </div>
-
+        <div class="collection-card">
+          <div class="collection-img">
+            <div class="collection-tag">No.04</div>
+            <img src="collection_4.png" alt="しなやかな強さを纏うカーディガン Cream × Green">
+          </div>
+          <div class="collection-info">
+            <h3>しなやかな強さを纏うカーディガン</h3>
+            <p class="collection-color">Cream × Green</p>
+            <p class="collection-desc">柔らかなクリームの地に、グリーンの袖口が自然のやさしさを纏わせる。日常に溶け込みながら、静かに自分らしさを表現する。</p>
+          </div>
+        </div>
       </div>
+      <div class="collection-philosophy">
+        <p>装飾に頼らず、自分自身の持つ美しさや強さにそっと光を当てる。</p>
+        <p>あなたが少し背筋を伸ばしたくなる日、心を整えたくなる時間に、この一着が静かに寄り添うことができたなら。</p>
+      </div>
+    </div>
+  </section>
 
-      <p class="footer-bottom">© 2026 SalonName. All rights reserved.</p>
+  <!-- ===== ペルソナ ===== -->
+  <section class="section persona">
+    <div class="container persona-inner">
+      <div class="persona-quote">
+        <p class="persona-big">"</p>
+        <p class="persona-text">
+          ファッションは「誰かの視線を意識するもの」ではない。<br>
+          自分の軸に戻るための、小さな儀式。
+        </p>
+        <p class="persona-from">— Haruka, 30 / Freelance Editor / Nakameguro</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== コンタクト ===== -->
+  <section class="section contact" id="contact">
+    <div class="container contact-inner">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Lunévielの世界観を、<br>あなたの日常へ。</h2>
+      <p class="contact-desc">新作情報・ブランドストーリーをいち早くお届けします。</p>
+      <form class="contact-form" id="contact-form">
+        <div class="form-row">
+          <input type="text" placeholder="お名前" name="name" required>
+          <input type="email" placeholder="メールアドレス" name="email" required>
+        </div>
+        <textarea placeholder="メッセージ（任意）" name="message" rows="4"></textarea>
+        <button type="submit" class="btn-primary">送信する</button>
+      </form>
+      <div class="contact-sns">
+        <p>Instagram</p>
+        <p class="sns-handle">@luneviel_official</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== フッター ===== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <img src="logo.png" alt="Lunéviel" class="footer-logo-img">
+      <p class="footer-tagline">自然体でいるための、美しい選択。</p>
+      <nav class="footer-nav">
+        <a href="#concept">Concept</a>
+        <a href="#story">Story</a>
+        <a href="#collection">Collection</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <p class="footer-copy">© 2026 Lunéviel. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- ===== チャットボット ===== -->
-  <div id="chatbot-fab">
-    <div class="chat-window" id="chat-window">
-      <div class="chat-header">
-        💬 よくあるご質問
-      </div>
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-input-row">
-        <input type="text" id="chat-input" placeholder="質問を入力…">
-        <button id="chat-send" onclick="handleInput()" aria-label="送信">➤</button>
-      </div>
-    </div>
-    <button class="chat-btn" onclick="toggleChat()" aria-label="チャットを開く">💬</button>
-  </div>
-
-  <script src="chatbot.js"></script>
   <script>
-    /* お問い合わせフォーム送信のデモ処理 */
-    function handleSubmit(e) {
-      e.preventDefault();
-      alert('お問い合わせを受け付けました。担当者よりご連絡いたします。');
-      e.target.reset();
-    }
-  </script>
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('main-nav');
+    toggle.addEventListener('click', () => {
+      nav.classList.toggle('open');
+      toggle.classList.toggle('active');
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      nav.classList.remove('open');
+      toggle.classList.remove('active');
+    }));
 
+    const header = document.getElementById('site-header');
+    function updateHeader() {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+      header.classList.toggle('on-hero', window.scrollY < window.innerHeight * 0.8);
+    }
+    window.addEventListener('scroll', updateHeader);
+    updateHeader();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.section-label, .section-title, .concept-item, .story-body, .collection-card, .persona-text').forEach(el => {
+      el.classList.add('fade-in');
+      observer.observe(el);
+    });
+
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = '送信しました';
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+    });
+  </script>
 </body>
 </html>
