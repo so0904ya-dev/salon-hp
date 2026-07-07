@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>フロー図生成ツール</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 64px;
+    }
+
+    /* ===== ページヘッダー ===== */
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 900;
+      color: #1a202c;
+      letter-spacing: -0.02em;
+    }
+    .page-header p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #64748b;
+    }
+
+    /* ===== 入力パネル ===== */
+    .input-panel {
+      width: 100%;
+      max-width: 680px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .input-panel label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #334155;
+    }
+    .input-panel textarea {
+      width: 100%;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: #334155;
+      resize: none;
+      min-height: 80px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-panel textarea:focus { border-color: #3b82f6; }
+
+    .generate-btn {
+      align-self: center;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 40px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .generate-btn:hover { background: #1d4ed8; }
+    .generate-btn:active { transform: scale(0.97); }
+    .generate-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+
+    /* ===== フロー図エリア ===== */
+    .flow-area {
+      width: 100%;
+      max-width: 960px;
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      display: none;
+    }
+    .flow-area.visible { display: block; }
+
+    /* タイトル */
+    .flow-title {
+      text-align: center;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 900;
+      color: #1a202c;
+      margin-bottom: 48px;
+    }
+
+    /* ===== ステップ横並び ===== */
+    .steps-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+    }
+
+    /* 矢印 */
+    .arrow {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      margin-top: 28px; /* サークルと縦位置を合わせる */
+    }
+    .arrow svg {
+      width: 56px;
+      height: 24px;
+    }
+
+    /* 各ステップ */
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+      max-width: 200px;
+    }
+
+    /* Step ラベル */
+    .step-label {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #2563eb;
+    }
+
+    /* サークル（完了 = 塗り、未完了 = 枠） */
+    .step-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid #2563eb;
+      background: transparent;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .step-circle.filled {
+      background: #2563eb;
+    }
+
+    /* アイコン */
+    .step-icon {
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* テキスト */
+    .step-text {
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-weight: 700;
+      color: #1a202c;
+      text-align: center;
+    }
+
+    /* ===== ローディング ===== */
+    .loading {
+      text-align: center;
+      padding: 32px;
+      color: #64748b;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== エラー ===== */
+    .error-msg {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      padding: 16px;
+      color: #dc2626;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* ===== レスポンシブ ===== */
+    @media (max-width: 600px) {
+      .steps-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .arrow {
+        transform: rotate(90deg);
+        margin: 4px 0;
+      }
+      .step-item { max-width: 100%; width: 100%; }
+      .flow-area { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>フロー図ジェネレーター</h1>
+    <p>プロンプトを入力すると、ステップ形式のフロー図を自動生成します</p>
+  </div>
+
+  <!-- ===== 入力パネル ===== -->
+  <div class="input-panel">
+    <label>テーマ・プロンプト</label>
+    <textarea id="prompt-input" placeholder="例：朝のルーティン 3ステップ、プロジェクト進行の流れ、料理の手順など…"></textarea>
+    <button class="generate-btn" id="generate-btn" onclick="generateFlow()">フロー図を生成する</button>
+  </div>
+
+  <!-- ===== フロー図表示エリア ===== -->
+  <div class="flow-area" id="flow-area">
+    <div id="flow-content"></div>
+  </div>
+
+  <script>
+    /* SVGアイコンライブラリ */
+    const ICONS = {
+      water: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28 20 L24 60 L56 60 L52 20 Z" stroke="#2563eb" stroke-width="3" fill="#dbeafe" stroke-linejoin="round"/>
+        <line x1="26" y1="44" x2="54" y2="44" stroke="#93c5fd" stroke-width="2"/>
+        <ellipse cx="40" cy="60" rx="16" ry="3" fill="#93c5fd" opacity="0.4"/>
+      </svg>`,
+      stretch: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="16" r="7" stroke="#2563eb" stroke-width="3"/>
+        <line x1="40" y1="23" x2="40" y2="48" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="36" x2="22" y2="28" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="36" x2="58" y2="28" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="48" x2="30" y2="65" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="48" x2="50" y2="65" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+      </svg>`,
+      task: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="16" y="12" width="44" height="56" rx="4" stroke="#2563eb" stroke-width="3" fill="#dbeafe"/>
+        <line x1="26" y1="28" x2="50" y2="28" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="22" y1="40" x2="26" y2="44" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="26" y1="44" x2="32" y2="36" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="36" y1="40" x2="54" y2="40" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="22" y1="54" x2="26" y2="58" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="26" y1="58" x2="32" y2="50" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="36" y1="54" x2="54" y2="54" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="52" y1="56" x2="60" y2="48" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="60" y1="48" x2="60" y2="68" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="52" y1="68" x2="68" y2="68" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>`,
+      default: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="28" stroke="#2563eb" stroke-width="3" fill="#dbeafe"/>
+        <line x1="40" y1="26" x2="40" y2="40" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="40" cy="52" r="3" fill="#2563eb"/>
+      </svg>`,
+      check: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="28" stroke="#2563eb" stroke-width="3" fill="#dbeafe"/>
+        <polyline points="26,42 36,52 54,30" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`,
+      run: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="14" r="7" stroke="#2563eb" stroke-width="3"/>
+        <path d="M34 24 L30 50 L36 48 L38 60 L42 60 L40 48 L48 50 L44 24 Z" stroke="#2563eb" stroke-width="2.5" fill="#dbeafe" stroke-linejoin="round"/>
+        <line x1="30" y1="50" x2="22" y2="62" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="48" y1="50" x2="56" y2="62" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>`,
+      sleep: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 20 Q20 40 30 56 Q50 64 62 48 Q42 56 34 44 Q24 32 30 20 Z" stroke="#2563eb" stroke-width="3" fill="#dbeafe"/>
+        <text x="56" y="26" font-size="14" fill="#2563eb" font-weight="bold">z</text>
+        <text x="62" y="18" font-size="10" fill="#93c5fd">z</text>
+      </svg>`,
+      food: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="48" rx="24" ry="14" stroke="#2563eb" stroke-width="3" fill="#dbeafe"/>
+        <line x1="40" y1="20" x2="40" y2="34" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="30" y1="20" x2="30" y2="34" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+        <path d="M50 20 Q56 27 50 34" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+      </svg>`,
+      book: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="16" y="16" width="48" height="52" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+        <rect x="16" y="16" width="8" height="52" rx="2" fill="#93c5fd"/>
+        <line x1="30" y1="30" x2="56" y2="30" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="30" y1="40" x2="56" y2="40" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="30" y1="50" x2="48" y2="50" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>`,
+    };
+
+    /* キーワードからアイコンを選ぶ */
+    function pickIcon(text) {
+      const t = text;
+      if (/水|飲|drink|water/i.test(t)) return ICONS.water;
+      if (/スト|stretch|運動|体操|exercise/i.test(t)) return ICONS.stretch;
+      if (/タスク|書|メモ|ノート|todo|list|note/i.test(t)) return ICONS.task;
+      if (/チェック|確認|check|完了|done/i.test(t)) return ICONS.check;
+      if (/走|ラン|run|歩|walk/i.test(t)) return ICONS.run;
+      if (/寝|睡眠|sleep|休/i.test(t)) return ICONS.sleep;
+      if (/食|朝食|昼食|夕食|meal|eat/i.test(t)) return ICONS.food;
+      if (/本|読|book|read|勉強|学/i.test(t)) return ICONS.book;
+      return ICONS.default;
+    }
+
+    /* 矢印SVG */
+    const ARROW_SVG = `<svg viewBox="0 0 56 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="12" x2="44" y2="12" stroke="#2563eb" stroke-width="2.5"/>
+      <polyline points="36,4 48,12 36,20" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+    </svg>`;
+
+    /* フロー図を描画 */
+    function renderFlow(title, steps) {
+      const flowArea = document.getElementById('flow-area');
+      const content = document.getElementById('flow-content');
+
+      let stepsHtml = '';
+      steps.forEach((step, i) => {
+        const isFirst = i === 0;
+        const circleClass = isFirst ? 'step-circle filled' : 'step-circle';
+        const icon = pickIcon(step);
+
+        if (i > 0) {
+          stepsHtml += `<div class="arrow">${ARROW_SVG}</div>`;
+        }
+        stepsHtml += `
+          <div class="step-item">
+            <div class="step-label">Step ${i + 1}</div>
+            <div class="${circleClass}"></div>
+            <div class="step-icon">${icon}</div>
+            <div class="step-text">${step}</div>
+          </div>`;
+      });
+
+      content.innerHTML = `
+        <div class="flow-title">${title}</div>
+        <div class="steps-row">${stepsHtml}</div>`;
+      flowArea.classList.add('visible');
+    }
+
+    /* API呼び出し */
+    async function generateFlow() {
+      const prompt = document.getElementById('prompt-input').value.trim();
+      const btn = document.getElementById('generate-btn');
+      const flowArea = document.getElementById('flow-area');
+      const content = document.getElementById('flow-content');
+
+      if (!prompt) {
+        alert('テーマを入力してください');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '生成中…';
+      flowArea.classList.add('visible');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div>Claude がフロー図を生成しています…</div>';
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `以下のテーマでフロー図（ステップ図解）を作成してください。
+
+テーマ: ${prompt}
+
+必ず以下のJSON形式のみで返してください（他のテキスト不要）:
+{
+  "title": "タイトル（例：朝のルーティン 3ステップ）",
+  "steps": ["ステップ1のテキスト", "ステップ2のテキスト", "ステップ3のテキスト"]
+}
+
+ステップ数は3〜5個にしてください。各ステップは10文字以内の簡潔な表現にしてください。`
+          })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const text = data.reply || data.message || '';
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error('JSONが見つかりません');
+        const parsed = JSON.parse(jsonMatch[0]);
+        renderFlow(parsed.title, parsed.steps);
+
+      } catch (err) {
+        content.innerHTML = `<div class="error-msg">エラーが発生しました: ${err.message}<br>APIの設定を確認してください。</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'フロー図を生成する';
+      }
+    }
+
+    /* Enterキーで生成 */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.ctrlKey) generateFlow();
+    });
+  </script>
+
+</body>
+</html>

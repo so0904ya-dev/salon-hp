@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>紙の本 vs 電子書籍</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 64px;
+    }
+
+    /* ===== ヘッダー ===== */
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 900;
+      color: #1a202c;
+      letter-spacing: -0.02em;
+    }
+    .page-header p {
+      margin-top: 8px;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: #64748b;
+    }
+
+    /* ===== メインレイアウト ===== */
+    .comparison-wrapper {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      width: 100%;
+      max-width: 960px;
+      align-items: stretch;
+    }
+
+    /* ===== 左右カード共通 ===== */
+    .side-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+    .side-card h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1a202c;
+    }
+
+    /* アイコン */
+    .item-icon {
+      width: 110px;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .item-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 特徴リスト */
+    .feature-list {
+      list-style: none;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.92rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .feature-list li::before {
+      content: "●";
+      color: #3b82f6;
+      font-size: 0.6rem;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    /* ===== 中央 VS パネル ===== */
+    .center-panel {
+      width: 220px;
+      background: #eff6ff;
+      border: 2px solid #3b82f6;
+      border-radius: 20px;
+      margin: 0 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 32px 20px;
+      box-shadow: 0 4px 24px rgba(59,130,246,0.15);
+    }
+    .center-panel h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #1d4ed8;
+    }
+
+    /* VS ロゴ */
+    .vs-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #3b82f6;
+      line-height: 1;
+    }
+    .vs-arrow {
+      font-size: 1.4rem;
+      color: #93c5fd;
+    }
+
+    /* テキストエリア */
+    .prompt-area {
+      width: 100%;
+      border: 1.5px solid #93c5fd;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: #334155;
+      resize: none;
+      min-height: 72px;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .prompt-area:focus { border-color: #3b82f6; }
+
+    /* 生成ボタン */
+    .generate-btn {
+      width: 100%;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .generate-btn:hover { background: #2563eb; }
+    .generate-btn:active { transform: scale(0.97); }
+    .generate-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+
+    .center-hint {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ===== 動的生成結果 ===== */
+    .result-section {
+      width: 100%;
+      max-width: 960px;
+      margin-top: 32px;
+      display: none;
+    }
+    .result-section.visible { display: block; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .result-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    }
+    .result-card h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1d4ed8;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eff6ff;
+    }
+    .result-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .result-card ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .result-card ul li::before {
+      content: "✓";
+      color: #3b82f6;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ローディング */
+    .loading {
+      text-align: center;
+      padding: 32px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* エラー */
+    .error-msg {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      padding: 16px;
+      color: #dc2626;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* ===== レスポンシブ ===== */
+    @media (max-width: 720px) {
+      .comparison-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+      }
+      .center-panel {
+        width: 100%;
+        margin: 16px 0;
+        padding: 24px 20px;
+      }
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>紙の本 vs 電子書籍</h1>
+    <p>プロンプトを貼り付けて、左右に並ぶ比較図解を生成してみよう</p>
+  </div>
+
+  <div class="comparison-wrapper">
+
+    <!-- ===== 左：紙の本 ===== -->
+    <div class="side-card">
+      <h2>紙の本</h2>
+      <!-- 本のSVGアイコン -->
+      <div class="item-icon">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="20" width="70" height="60" rx="4" fill="#dbeafe"/>
+          <rect x="15" y="20" width="8" height="60" rx="2" fill="#93c5fd"/>
+          <line x1="30" y1="35" x2="75" y2="35" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+          <line x1="30" y1="45" x2="75" y2="45" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+          <line x1="30" y1="55" x2="65" y2="55" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+          <line x1="30" y1="65" x2="70" y2="65" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <ul class="feature-list">
+        <li>物理的な質感・所有感がある</li>
+        <li>電源が不要でどこでも読める</li>
+        <li>目に優しく長時間読書が快適</li>
+        <li>古本として売買・譲渡が可能</li>
+        <li>書き込みや付箋が自由にできる</li>
+        <li>コレクションとして飾れる</li>
+      </ul>
+    </div>
+
+    <!-- ===== 中央：VSパネル ===== -->
+    <div class="center-panel">
+      <h2>比較・生成</h2>
+      <div class="vs-logo">
+        <span class="vs-arrow">←</span>
+        <span>VS</span>
+        <span class="vs-arrow">→</span>
+      </div>
+      <textarea
+        class="prompt-area"
+        id="prompt-input"
+        placeholder="ここにプロンプトを貼り付け（例：読書スタイル別のメリットを詳しく比較して）"></textarea>
+      <button class="generate-btn" id="generate-btn" onclick="generateComparison()">生成する</button>
+      <p class="center-hint">左右の要素を比較する図解が生成されます</p>
+    </div>
+
+    <!-- ===== 右：電子書籍 ===== -->
+    <div class="side-card">
+      <h2>電子書籍</h2>
+      <!-- タブレットのSVGアイコン -->
+      <div class="item-icon">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="10" width="60" height="80" rx="8" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/>
+          <rect x="28" y="18" width="44" height="56" rx="3" fill="#fff"/>
+          <rect x="32" y="24" width="36" height="20" rx="2" fill="#bfdbfe"/>
+          <line x1="32" y1="52" x2="60" y2="52" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="32" y1="60" x2="64" y2="60" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="32" y1="68" x2="56" y2="68" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="50" cy="94" r="3" fill="#93c5fd"/>
+        </svg>
+      </div>
+      <ul class="feature-list">
+        <li>携帯性・軽量化で持ち運び楽々</li>
+        <li>検索機能・マーカーで効率的に復習</li>
+        <li>省スペースで何千冊も保管できる</li>
+        <li>価格が割引・セール多数あり</li>
+        <li>即時購入・ダウンロードが可能</li>
+        <li>フォントサイズ変更で読みやすさ調整</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ===== 動的生成結果エリア ===== -->
+  <div class="result-section" id="result-section">
+    <div id="result-content"></div>
+  </div>
+
+  <script>
+    async function generateComparison() {
+      const prompt = document.getElementById('prompt-input').value.trim();
+      const btn = document.getElementById('generate-btn');
+      const section = document.getElementById('result-section');
+      const content = document.getElementById('result-content');
+
+      // プロンプトが空の場合はデフォルト比較を表示
+      const finalPrompt = prompt || '紙の本と電子書籍を様々な観点で詳しく比較してください。';
+
+      btn.disabled = true;
+      btn.textContent = '生成中…';
+      section.classList.add('visible');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div>Claude が比較を生成しています…</div>';
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `以下の指示に従って、「紙の本」と「電子書籍」の比較情報をJSON形式で返してください。
+
+指示: ${finalPrompt}
+
+必ず以下のJSON形式のみで返してください（他のテキスト不要）:
+{
+  "left_title": "紙の本",
+  "left_points": ["ポイント1", "ポイント2", "ポイント3", "ポイント4", "ポイント5"],
+  "right_title": "電子書籍",
+  "right_points": ["ポイント1", "ポイント2", "ポイント3", "ポイント4", "ポイント5"]
+}`
+          })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        // JSONを抽出してパース
+        const text = data.reply || data.message || '';
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error('JSONが見つかりません');
+
+        const parsed = JSON.parse(jsonMatch[0]);
+        renderResult(parsed);
+
+      } catch (err) {
+        content.innerHTML = `<div class="error-msg">エラーが発生しました: ${err.message}<br>APIの設定を確認してください。</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '生成する';
+      }
+    }
+
+    function renderResult(data) {
+      const content = document.getElementById('result-content');
+      const makeItems = arr => arr.map(p => `<li>${p}</li>`).join('');
+      content.innerHTML = `
+        <div class="result-grid">
+          <div class="result-card">
+            <h3>${data.left_title}</h3>
+            <ul>${makeItems(data.left_points)}</ul>
+          </div>
+          <div class="result-card">
+            <h3>${data.right_title}</h3>
+            <ul>${makeItems(data.right_points)}</ul>
+          </div>
+        </div>`;
+    }
+  </script>
+
+</body>
+</html>
